@@ -61,7 +61,7 @@ function App() {
     
   return (
     <userContext.Provider value={{userData, setUserData}}>
-      <div className='font-mono'>
+      <div className='font-poppins'>
         <RouterProvider router={router}/>
       </div>
     </userContext.Provider>

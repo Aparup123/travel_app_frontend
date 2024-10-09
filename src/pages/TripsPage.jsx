@@ -23,7 +23,9 @@ function TripsPage() {
     }
   return (
     <>
+    <div className="md:grid lg:grid-cols-3 md:grid-cols-2">
         {trips.map((trip)=><div key={trip._id} onClick={()=>goToTrip(trip._id)}><Trip key={trip.id} trip={trip}/></div>)}
+    </div>
     </>
   )
 }

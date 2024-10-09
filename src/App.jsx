@@ -9,6 +9,8 @@ import { userContext } from './contexts/userContext'
 import WelcomePage from './pages/WelcomePage'
 import TripsPage from './pages/TripsPage'
 import Trip from './pages/TripPage'
+import CreateTrip from './pages/CreateTrip'
+import SellerDashboard from './pages/SellerDashboard'
 
 const router=createBrowserRouter([
   {
@@ -38,6 +40,14 @@ const router=createBrowserRouter([
       {
         path:'/trips/:id',
         element:<Trip/>
+      },
+      {
+        path:'/create_trip',
+        element:<CreateTrip/>
+      },
+      {
+        path:'/seller_dashboard',
+        element:<SellerDashboard/>
       }
     ]
   },
@@ -45,7 +55,7 @@ const router=createBrowserRouter([
 
 
 function App() {
-    const [userData, setUserData]=useState({name:"", username:"", email:"", booked_trips:[]})
+    const [userData, setUserData]=useState({name:"", username:"", email:"", booked_trips:[], created_trips:[]})
     useEffect(() => {
         axios.get('http://localhost:3001/api/users/profile', {withCredentials:true})
         .then((res)=>{

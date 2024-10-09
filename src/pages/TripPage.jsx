@@ -8,6 +8,7 @@ function TripPage() {
     const navigate=useNavigate()
     const tripId=useParams().id
     const [trip, setTrip]=useState({_id:"", booked_by:[]})
+    const [owner,setOwner]=useState(false)
     useEffect(()=>{
       axios.get(`http://localhost:3001/api/trips/${tripId}`)
       .then((tripData)=>{
@@ -19,6 +20,10 @@ function TripPage() {
       })
 
     },[])
+
+    useEffect(()=>{
+      if(userData.created_trips.map(trip=>trip._id).includes(trip._id)) setOwner(true)
+    })
 
 
     function bookTrip(){
@@ -60,12 +65,25 @@ function TripPage() {
             <p>Description: {trip.description}</p>
             <p>Duration: {trip.duration}</p>
             <p>Date: {trip.start_date}-{trip.end_date}</p>
-            <p>Locatin: {trip.location}</p>
+            <p>Location: {trip.location}</p>
             <p>Total capacity:{trip.total_capacity}, Total booked:{trip.total_booked}, Available tickets:{trip.available_tickets}</p>
             <p>Price:{trip.price}</p>
-            {trip?.booked_by.includes(userData._id)?<button onClick={cancelTrip}>cancel</button>:<button onClick={bookTrip}>Book</button>}
+            {trip?.booked_by.includes(userData._id)?<button onClick={cancelTrip}>cancel</button>:userData.role=="seller"?<></>:<button onClick={bookTrip}>Book</button>}
+            
         </div>
-
+        {owner?
+          <div className="border p-4 m-4">
+            <h1>Booked by</h1>
+            {trip.booked_by<=0?<>Not yet booked</>:
+            <div>
+              {trip.booked_by.map((user,index)=>{return <p key={user._id}>{index+1}. <span className="font-bold">{user.username}</span> {user.email}</p>
+              })
+              }
+            </div>
+            }
+          </div>:
+          <></>
+        }
     </>)
 }
 

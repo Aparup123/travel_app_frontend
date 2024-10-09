@@ -106,13 +106,13 @@ function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          {/* <button
+          <button
             className="mt-2 mx-auto block bg-gray-600 hover:bg-gray-900 text-zinc-200 px-3 py-1 rounded  "
             type="submit"
           >
             Login
-          </button> */}
-          <Button color="gray" size="sm">Login</Button>
+          </button>
+          {/* <Button color="gray" size="sm">Login</Button> */}
         </form>
       </div>
     </div>

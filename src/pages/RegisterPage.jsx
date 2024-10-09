@@ -4,9 +4,11 @@ import { useNavigate } from "react-router-dom"
 import axios from "axios"
 import registerImage from '../assets/images/register.jpg'
 import { FaGoogle, FaFacebookF } from 'react-icons/fa'
+import { ToggleSwitch } from "flowbite-react"
 
 function RegisterPage() {
   const { userData, setUserData } = useContext(userContext)
+  const [isSeller, setIsSeller]=useState(false)
   console.log("user data:", userData)
   const navigate = useNavigate()
   useEffect(() => {
@@ -15,13 +17,22 @@ function RegisterPage() {
     }
   }, [])
 
+
+
   const [user, setUser] = useState({
     name: "",
     username: "",
     age: "",
     email: "",
-    password: ""
+    password: "",
+    org_name: "",
+    org_location:"",
+    role:"",
   })
+
+  useEffect(()=>{
+    isSeller?setUser({...user, role:'seller'}):setUser({...user, role:'user'})
+  },[isSeller])
 
   function registerUser(e) {
     e.preventDefault()
@@ -44,7 +55,9 @@ function RegisterPage() {
               <h2 className="text-center text-2xl">Register and get ready</h2>
             </div>
             <form onSubmit={registerUser} className="flex flex-col px-6 text-sm justify-center">
-
+              <div className="float-right">
+              <ToggleSwitch checked={isSeller} label="Seller?" onChange={setIsSeller} sizing="sm" className="float-right"/>
+              </div>
               <label htmlFor="name" className="mb-1">Name</label>
               <input id="name" className="border p-1 px-2 mb-2 text-sm" name="name" type="text" placeholder="" value={user.name} onChange={(e) => setUser({ ...user, name: e.target.value })} />
               <label htmlFor="username" className="mb-1">Username</label>
@@ -55,6 +68,12 @@ function RegisterPage() {
               <input className="border p-1 px-2 mb-2 text-sm" name="email" type="email" placeholder="" value={user.email} onChange={(e) => setUser({ ...user, email: e.target.value })} />
               <label htmlFor="age" className="mb-1">Password</label>
               <input className="border p-1 px-2 mb-2 text-sm" name="password" type="password" placeholder="" value={user.password} onChange={(e) => setUser({ ...user, password: e.target.value })} />
+              {isSeller&&<>
+              <label htmlFor="org_name" className="mb-1">Organization name</label>
+              <input className="border p-1 px-2 mb-2 text-sm" name="org_name" type="text" placeholder="" value={user.org_name} onChange={(e) => setUser({ ...user, org_name: e.target.value })} />
+              <label htmlFor="org_location" className="mb-1">Organization location</label>
+              <input className="border p-1 px-2 mb-2 text-sm" name="org_location" type="text" placeholder="" value={user.org_location} onChange={(e) => setUser({ ...user, org_location: e.target.value })} />
+              </>}
               <button className="border-2 rounded border-blue-400 bg-blue-500 py-1 text-white mt-2 mb-4" type="submit">Register</button>
               <div className="flex justify-center gap-2">
                 <i className="text-xl border-2 p-1 rounded-full inline-block"><FaGoogle /></i>

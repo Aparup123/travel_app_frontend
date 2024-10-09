@@ -12,8 +12,8 @@ function Header() {
       {userData.username && <NavLink to='/profile' className={({isActive})=>isActive?'text-blue-500':''}>Profile</NavLink>}
       {!userData.username && <NavLink to='/login' className={({isActive})=>isActive?'text-blue-500':''}>login</NavLink>}
       {!userData.username && <NavLink to='/register' className={({isActive})=>isActive?'text-blue-500':''}>Register</NavLink>}
-
-      
+      {userData.role=="seller" && <NavLink to='/create_trip' className={({isActive})=>isActive?'text-blue-500':''}>Create trip</NavLink>}
+      {userData.role=="seller" && <NavLink to='/seller_dashboard' className={({isActive})=>isActive?'text-blue-500':''}>Dashboard</NavLink>}
     </div>
   )
 }

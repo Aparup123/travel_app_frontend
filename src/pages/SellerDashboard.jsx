@@ -8,7 +8,7 @@ export default function SellerDashboard() {
     const {userData}=useContext(userContext)
     const navigate=useNavigate()
    
-
+  
   return (
     <div className="overflow-x-auto">
       <Table hoverable>

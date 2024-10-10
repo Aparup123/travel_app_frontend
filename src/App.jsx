@@ -11,7 +11,7 @@ import TripsPage from './pages/TripsPage'
 import Trip from './pages/TripPage'
 import CreateTrip from './pages/CreateTrip'
 import SellerDashboard from './pages/SellerDashboard'
-
+import {tripContext} from './contexts/tripContext'
 const router=createBrowserRouter([
   {
     path:'/',
@@ -56,24 +56,38 @@ const router=createBrowserRouter([
 
 function App() {
     const [userData, setUserData]=useState({name:"", username:"", email:"", booked_trips:[], created_trips:[]})
+    const [trips, setTrips]=useState([])
     useEffect(() => {
         axios.get('http://localhost:3001/api/users/profile', {withCredentials:true})
         .then((res)=>{
             console.log(res.data)
             setUserData(res.data)
+
+           
         }).catch((err)=>{
             console.log(err)
             redirect('/login')
         })
 
+         // fetch trips
+         axios.get("http://localhost:3001/api/trips")
+         .then((res)=>{
+           setTrips(res.data)
+         })
+         .catch((err)=>{
+           console.log(err)
+         })
+        
     }, []);
     
     
   return (
     <userContext.Provider value={{userData, setUserData}}>
-      <div className='font-poppins'>
+      <tripContext.Provider value={{trips, setTrips}}>
+        <div className='font-poppins'>
         <RouterProvider router={router}/>
       </div>
+      </tripContext.Provider>
     </userContext.Provider>
   )
 }

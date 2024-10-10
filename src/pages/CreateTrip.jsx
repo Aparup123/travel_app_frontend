@@ -1,9 +1,13 @@
 import { useState, useContext, useEffect } from "react"
 import { userContext } from "../contexts/userContext"
 import { useNavigate } from "react-router-dom"
-import { Label, TextInput, FileInput, } from "flowbite-react"
+import { Label, FileInput, } from "flowbite-react"
 
 import axios from "axios"
+import { tripContext } from "../contexts/tripContext"
+import getCurrentDate from "../utils/getCurrentDate"
+
+
 
 export default function CreateTrip() {
   const [tripImage, setTripImage]=useState()
@@ -17,6 +21,7 @@ export default function CreateTrip() {
     price:0.0,
   })
   const { userData, setUserData } = useContext(userContext)
+  const { trips, setTrips } = useContext(tripContext)
   const navigate = useNavigate()
   console.log(tripImage)
   useEffect(() => {
@@ -24,6 +29,7 @@ export default function CreateTrip() {
       navigate('/profile')
     }
   })
+  console.log(trip)
 
   function createTrip(e){
     e.preventDefault()
@@ -32,6 +38,7 @@ export default function CreateTrip() {
     .then((res)=>{
       console.log(res)
       setUserData({...userData, created_trips:userData.created_trips.concat(res.data)})
+      setTrips(trips.concat(res.data))
       navigate('/seller_dashboard')
     })
     .catch((err)=>{
@@ -51,9 +58,9 @@ export default function CreateTrip() {
           <label htmlFor="description" className="block">Trip description</label>
           <textarea id="description" onChange={(e)=>{setTrip({...trip, description:e.target.value})}}></textarea>
           <label htmlFor="start_date" className="block">Start date</label>
-          <input id="start_date" type="date" onChange={(e)=>{setTrip({...trip, start_date:e.target.value})}}/>
+          <input id="start_date" type="date" min={getCurrentDate()} onChange={(e)=>{setTrip({...trip, start_date:e.target.value})}}/>
           <label htmlFor="end_date" className="block">End date</label>
-          <input id="end_date" type="date" onChange={(e)=>{setTrip({...trip, end_date:e.target.value})}}/>
+          <input id="end_date" type="date" disabled={trip.start_date?false:true} min={trip.start_date} onChange={(e)=>{setTrip({...trip, end_date:e.target.value})}}/>
           <label htmlFor="capacity" className="block">Total capacity</label>
           <input id="capacity" type="number" onChange={(e)=>{setTrip({...trip, total_capacity:e.target.value})}}/>
           <label htmlFor="price" className="block">Ticket price</label>

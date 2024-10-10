@@ -1,20 +1,22 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import Trip from "../components/Trip"
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
+import { tripContext } from "../contexts/tripContext"
 function TripsPage() {
     const navigate=useNavigate()
-    const [trips, setTrips]= useState([])
-    useEffect(()=>{
-        axios.get('http://localhost:3001/api/trips')
-        .then((res)=>{
-            console.log(res)
-            setTrips(res.data)
-        })
-        .catch((err)=>{
-            console.log(err)
-        })
-    },[])
+    const {trips, setTrips}=useContext(tripContext)
+    // const [trips, setTrips]= useState([])
+    // useEffect(()=>{
+    //     axios.get('http://localhost:3001/api/trips')
+    //     .then((res)=>{
+    //         console.log(res)
+    //         setTrips(res.data)
+    //     })
+    //     .catch((err)=>{
+    //         console.log(err)
+    //     })
+    // },[])
 
     function goToTrip(tripId){
         console.log('clicked')

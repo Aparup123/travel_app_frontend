@@ -6,14 +6,17 @@ function Header() {
   const {userData}=useContext(userContext)
   return (
     <div className="flex justify-center gap-4 border-b-2 p-4 text-xl ">
-
-      <NavLink to='/' className={({isActive})=>isActive?"text-blue-500":''}>Home</NavLink>
-      <NavLink to='/trips' className={({isActive})=>isActive?"text-blue-500":''}>Trips</NavLink>
-      {userData.username && <NavLink to='/profile' className={({isActive})=>isActive?'text-blue-500':''}>Profile</NavLink>}
-      {!userData.username && <NavLink to='/login' className={({isActive})=>isActive?'text-blue-500':''}>login</NavLink>}
-      {!userData.username && <NavLink to='/register' className={({isActive})=>isActive?'text-blue-500':''}>Register</NavLink>}
-      {userData.role=="seller" && <NavLink to='/create_trip' className={({isActive})=>isActive?'text-blue-500':''}>Create trip</NavLink>}
-      {userData.role=="seller" && <NavLink to='/seller_dashboard' className={({isActive})=>isActive?'text-blue-500':''}>Dashboard</NavLink>}
+    <div role="tablist" className="tabs tabs-lifted">
+ 
+ 
+      <NavLink to='/' className={({isActive})=>isActive?"text-blue-500 tab tab-active":'tab'}>Home</NavLink>
+      <NavLink to='/trips' className={({isActive})=>isActive?"text-blue-500 tab tab-active":'tab'}>Trips</NavLink>
+      {userData.username && <NavLink to='/profile' className={({isActive})=>isActive?'text-blue-500 tab tab-active':'tab'}>Profile</NavLink>}
+      {!userData.username && <NavLink to='/login' className={({isActive})=>isActive?'text-blue-500 tab tab-active':'tab'}>login</NavLink>}
+      {!userData.username && <NavLink to='/register' className={({isActive})=>isActive?'text-blue-500 tab tab-active':'tab'}>Register</NavLink>}
+      {userData.role=="seller" && <NavLink to='/create_trip' className={({isActive})=>isActive?'text-blue-500 tab tab-active':'tab'}>Create trip</NavLink>}
+      {userData.role=="seller" && <NavLink to='/seller_dashboard' className={({isActive})=>isActive?'text-blue-500 tab tab-active':'tab'}>Dashboard</NavLink>}
+      </div>
     </div>
   )
 }

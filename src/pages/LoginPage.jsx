@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { userContext } from "../contexts/userContext";
 import FormValidationError from "../components/FormValidationError";
-import { Button } from "flowbite-react";
+
 
 function LoginPage() {
   const { userData, setUserData } = useContext(userContext);
@@ -107,7 +107,7 @@ function LoginPage() {
             />
           </div>
           <button
-            className="mt-2 mx-auto block bg-gray-600 hover:bg-gray-900 text-zinc-200 px-3 py-1 rounded  "
+            className="mt-2 mx-auto block btn btn-sm btn-neutral "
             type="submit"
           >
             Login

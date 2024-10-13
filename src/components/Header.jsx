@@ -14,6 +14,7 @@ function Header() {
       {userData.username && <NavLink to='/profile' className={({isActive})=>isActive?'text-blue-500 tab tab-active':'tab'}>Profile</NavLink>}
       {!userData.username && <NavLink to='/login' className={({isActive})=>isActive?'text-blue-500 tab tab-active':'tab'}>login</NavLink>}
       {!userData.username && <NavLink to='/register' className={({isActive})=>isActive?'text-blue-500 tab tab-active':'tab'}>Register</NavLink>}
+      {userData.username&&userData.role=="user" && <NavLink to='/my_trips' className={({isActive})=>isActive?'text-blue-500 tab tab-active':'tab'}>My trips</NavLink>}
       {userData.role=="seller" && <NavLink to='/create_trip' className={({isActive})=>isActive?'text-blue-500 tab tab-active':'tab'}>Create trip</NavLink>}
       {userData.role=="seller" && <NavLink to='/seller_dashboard' className={({isActive})=>isActive?'text-blue-500 tab tab-active':'tab'}>Dashboard</NavLink>}
       </div>

@@ -12,10 +12,15 @@ import Trip from './pages/TripPage'
 import CreateTrip from './pages/CreateTrip'
 import SellerDashboard from './pages/SellerDashboard'
 import {tripContext} from './contexts/tripContext'
+import MyTrips from './pages/MyTrips'
+import MyProfile from './pages/MyProfile'
+import ErrorPage from './pages/ErrorPage'
+import userProfileLoader from './utils/loaders/userProfileLoader'
 const router=createBrowserRouter([
   {
     path:'/',
     element:<Home/>,
+    errorElement:<ErrorPage/>,
     children:[
       {
         index:true,
@@ -23,7 +28,13 @@ const router=createBrowserRouter([
       },
       {
         path:'/profile',
-        element:<UserProfile/>
+        element:<MyProfile/>
+      },
+      {
+        path:'/profile/:name',
+        element:<UserProfile/>,
+        errorElement:<ErrorPage/>,
+        loader:userProfileLoader
       },
       {
         path:'/login',
@@ -48,6 +59,14 @@ const router=createBrowserRouter([
       {
         path:'/seller_dashboard',
         element:<SellerDashboard/>
+      },
+      {
+        path:'/my_trips',
+        element:<MyTrips/>
+      },
+      {
+        path:'/error',
+        element:<ErrorPage/>
       }
     ]
   },
@@ -85,8 +104,8 @@ function App() {
     <userContext.Provider value={{userData, setUserData}}>
       <tripContext.Provider value={{trips, setTrips}}>
         <div className='font-poppins'>
-        <RouterProvider router={router}/>
-      </div>
+          <RouterProvider router={router}/>
+        </div>
       </tripContext.Provider>
     </userContext.Provider>
   )

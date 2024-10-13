@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useContext, useEffect, useState } from "react"
-import { useNavigate, useParams } from "react-router-dom"
+import { Link, useNavigate, useParams } from "react-router-dom"
 import axios from "axios"
 import { userContext } from "../contexts/userContext"
 import { tripContext } from "../contexts/tripContext"
@@ -8,6 +8,8 @@ import { Dropdown } from "flowbite-react"
 import { MdEdit, MdDelete } from "react-icons/md";
 import { GoKebabHorizontal } from "react-icons/go"
 import availableTickets from "../utils/availableTickets"
+import tripImage from '../assets/images/tripImage.jpg'
+import getFormattedDate from "../utils/getFormattedDate"
 function TripPage() {
   const { userData, setUserData } = useContext(userContext)
   const { trips, setTrips } = useContext(tripContext)
@@ -28,7 +30,7 @@ function TripPage() {
   //   })
 
   // },[])
-
+  console.log("trip",trip)
   useEffect(() => {
     if (trips.length == 0)
       setLoading(true)
@@ -54,16 +56,29 @@ function TripPage() {
     }
     axios.post(`http://localhost:3001/api/trips/book/${trip._id}`, null, { withCredentials: true })
       .then((res) => {
-        console.log(res.data)
-        setUserData({ ...userData, booked_trips: userData.booked_trips.concat(res.data) })
-        setTrip({ ...trip, booked_by: trip.booked_by.concat(userData._id) })
-        setTrips(trips.map((t) => {
-          if (t._id == tripId) {
-            t.booked_by = t.booked_by.concat(userData._id)
-          }
-          return t
-        }))
+        console.log(res.data);
+        // Update userData to include the newly booked trip
+        setUserData(prevUserData => ({
+            ...prevUserData,
+            booked_trips: [...prevUserData.booked_trips, res.data]
+        }));
 
+        // Update the specific trip's booked_by list to include the current user
+        setTrip(prevTrip => ({
+            ...prevTrip,
+            booked_by: [...prevTrip.booked_by, userData]
+        }));
+
+        // Update the trips context to include the updated trip
+        setTrips(prevTrips => prevTrips.map(t => {
+            if (t._id === tripId) {
+                return {
+                    ...t,
+                    booked_by: [...t.booked_by, userData]
+                };
+            }
+            return t;
+        }));
       })
       .catch((err) => {
         console.log(err)
@@ -77,10 +92,11 @@ function TripPage() {
       .then((res) => {
         console.log(res.data)
         setUserData({ ...userData, booked_trips: userData.booked_trips.filter((t) => t._id != res.data._id) })
-        setTrip({ ...trip, booked_by: trip.booked_by.filter((id) => id != userData._id) })
+        setTrip(
+          (prevTrip)=>{return { ...prevTrip, booked_by: prevTrip.booked_by.filter((user) => {return user._id != userData._id} ) }})
         setTrips(trips.map((t) => {
           if (t._id == tripId) {
-            t.booked_by = t.booked_by.filter((id) => id != userData._id)
+            t.booked_by = t.booked_by.filter((user) => user._id != userData._id)
           }
           return t
         }))
@@ -93,9 +109,13 @@ function TripPage() {
   if (loading) {
     return "loading..."
   } else {
-    return (<>
-      <div className="border m-3 p-3 rounded relative">
-        <h3>{trip.title}</h3>
+    return (<div className="p-4">
+      <div className="card card-side border-2">
+        <figure>
+          <img src={tripImage}/>
+        </figure>
+        <div className="card-body"> 
+        <h1 className="card-title">{trip.title}</h1>
         {owner && <div className="absolute top-2 right-2">
           <Dropdown size="" label="" inline renderTrigger={() => <button className="border-gray-500 border-2 rounded px-2"><GoKebabHorizontal /></button>}>
             <Dropdown.Item>
@@ -106,17 +126,18 @@ function TripPage() {
             </Dropdown.Item>
           </Dropdown>
         </div>}
-        <p>Description: {trip.description}</p>
+        <p> {trip.description}</p>
         <p>Duration: {trip.duration}</p>
-        <p>Date: {trip.start_date}-{trip.end_date}</p>
+        <p>Start date: {getFormattedDate(trip.start_date)}</p>
+        <p>End date: {getFormattedDate(trip.end_date)}</p>
         <p>Location: {trip.location}</p>
-        <p>Total capacity:{trip.total_capacity}, Total booked:{trip.total_booked}, Available tickets:{trip.available_tickets}</p>
-        <p>Price:{trip.price}</p>
-        {
-
-        }
-        {trip?.booked_by.includes(userData._id) ? <button onClick={cancelTrip} className="border px-2">cancel</button> : userData.role == "seller" ? <></> :availableTickets(trip)? <button onClick={bookTrip} className="border px-2">Book</button>:<span>Full</span>}
-
+        <p>Available tickets: {trip.available_tickets}</p>
+        <p>Price: <span className="font-bold">Rs.{trip.price}</span></p>
+        <p>Seller: <Link to={`/profile/${trip.seller?.username}`} className="link">{trip.seller.name}</Link></p>
+        <div className="card-action">
+        {trip?.booked_by.map((user)=>user._id).includes(userData._id) ? <button onClick={cancelTrip} className="link link-error">Cancel</button> : userData.role == "seller" ? <></> :availableTickets(trip)? <button onClick={bookTrip} className="btn btn-success text-white">Book</button>:<span>Full</span>}
+        </div>
+        </div>
       </div>
       {owner ?
         <div className="border p-4 m-4">
@@ -136,7 +157,7 @@ function TripPage() {
         </div> :
         <></>
       }
-    </>)
+    </div>)
   }
 }
 

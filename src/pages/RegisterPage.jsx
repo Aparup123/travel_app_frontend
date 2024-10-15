@@ -48,8 +48,8 @@ function RegisterPage() {
   }
   return (
     <>
-      <div className="flex justify-center items-center   h-[88svh] overflow-hidden">
-        <div className="flex border rounded sm:h-[90%] lg:h-[30rem]">
+      <div className="flex justify-center ">
+        <div className="flex border rounded mt-5 mb-5">
           <div className="py-4">
             <div className="mb-4">
               <h2 className="text-center text-2xl">Register and get ready</h2>
@@ -75,15 +75,16 @@ function RegisterPage() {
               <input className="border p-1 px-2 mb-2 text-sm" name="org_location" type="text" placeholder="" value={user.org_location} onChange={(e) => setUser({ ...user, org_location: e.target.value })} />
               </>}
               <button className="border-2 rounded border-blue-400 bg-blue-500 py-1 text-white mt-2 mb-4" type="submit">Register</button>
+              <span className="block text-center mb-2">or signup with...</span>
               <div className="flex justify-center gap-2">
                 <i className="text-xl border-2 p-1 rounded-full inline-block"><FaGoogle /></i>
                 <i className="text-xl border-2 p-1 rounded-full inline-block"><FaFacebookF /></i>
               </div>
             </form>
           </div>
-          <div className="max-sm:hidden ">
-            <img src={registerImage} className="h-full w-auto" />
-          </div>
+          {/* <div className="max-sm:hidden">
+            <img src={registerImage} className="h-64  " />
+          </div> */}
         </div>
       </div>
     </>

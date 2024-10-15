@@ -10,6 +10,7 @@ export default function SellerDashboard() {
   
   return (
     <div className="overflow-x-auto p-2">
+    {userData.created_trips.length<=0?<span>You have not created any trips</span>:
       <table className="table table-zebra border">
         <thead>
         <tr>
@@ -24,7 +25,7 @@ export default function SellerDashboard() {
           </tr>
         </thead>
         <tbody className="divide-y">
-            {userData.created_trips.length<=0?<>You haven't created any trips</>:
+            {
                 userData.created_trips.map((trip)=>{return <tr key={trip._id} onClick={()=>{navigate(`/trips/${trip._id}`)}} className="bg-white dark:border-gray-700 dark:bg-gray-800">
                     <td className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     {trip.title}
@@ -42,6 +43,7 @@ export default function SellerDashboard() {
             }
         </tbody>
       </table>
+    }
     </div>
   );
 }

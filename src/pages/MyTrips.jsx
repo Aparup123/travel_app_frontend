@@ -19,8 +19,8 @@ export default function MyTrips() {
           <tr>
             <th>Trip</th>
             <th>Location</th>
-            <th>Price</th>
             <th>Date</th>
+            <th>Price</th>
           </tr>
         </thead>
         <tbody>
@@ -28,8 +28,8 @@ export default function MyTrips() {
             return <tr key={trip._id} className="hover" onClick={()=>navigate(`/trips/${trip._id}`)}>
               <td>{trip.title}</td>
               <td>{trip.location}</td>
-              <td>{trip.price}</td>
               <td>{getFormattedDate(trip.start_date)}</td>
+              <td>{trip.price}</td>
             </tr>
           })}
         </tbody>

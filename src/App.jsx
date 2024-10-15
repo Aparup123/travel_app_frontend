@@ -8,7 +8,7 @@ import RegisterPage from './pages/RegisterPage'
 import { userContext } from './contexts/userContext'
 import WelcomePage from './pages/WelcomePage'
 import TripsPage from './pages/TripsPage'
-import Trip from './pages/TripPage'
+import TripPage from './pages/TripPage'
 import CreateTrip from './pages/CreateTrip'
 import SellerDashboard from './pages/SellerDashboard'
 import {tripContext} from './contexts/tripContext'
@@ -16,6 +16,11 @@ import MyTrips from './pages/MyTrips'
 import MyProfile from './pages/MyProfile'
 import ErrorPage from './pages/ErrorPage'
 import userProfileLoader from './utils/loaders/userProfileLoader'
+import EditTrip from './pages/EditTrip'
+import editTripLoader from './utils/loaders/editTripLoader'
+import tripPageLoader from './utils/loaders/tripPageLoader'
+// import tripPageLoader from './utils/loaders/tripPageLoader'
+
 const router=createBrowserRouter([
   {
     path:'/',
@@ -50,7 +55,13 @@ const router=createBrowserRouter([
       },
       {
         path:'/trips/:id',
-        element:<Trip/>
+        element:<TripPage/>,
+        loader:tripPageLoader
+      },
+      {
+        path:'edit/trips/:id',
+        element:<EditTrip/>,
+        loader:editTripLoader
       },
       {
         path:'/create_trip',

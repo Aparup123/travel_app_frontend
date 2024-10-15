@@ -1,50 +1,48 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { useContext, useEffect, useState } from "react"
-import { Link, useNavigate, useParams } from "react-router-dom"
+import { useContext,useState } from "react"
+import {useLoaderData, useNavigate, useParams } from "react-router-dom"
 import axios from "axios"
 import { userContext } from "../contexts/userContext"
 import { tripContext } from "../contexts/tripContext"
-import { Dropdown } from "flowbite-react"
+
 import { MdEdit, MdDelete } from "react-icons/md";
 import { GoKebabHorizontal } from "react-icons/go"
-import availableTickets from "../utils/availableTickets"
+import availableTickets from "../utils/getAvailableTickets"
 import tripImage from '../assets/images/tripImage.jpg'
 import getFormattedDate from "../utils/getFormattedDate"
+import getAvailableTickets from "../utils/getAvailableTickets"
+import getDuration from "../utils/getDuration"
+
 function TripPage() {
   const { userData, setUserData } = useContext(userContext)
   const { trips, setTrips } = useContext(tripContext)
   const navigate = useNavigate()
   const tripId = useParams().id
-  // const trip=trips.filter((trip)=>trip._id==tripId)
-  const [trip, setTrip] = useState(null)
-  const [owner, setOwner] = useState(false)
-  const [loading, setLoading] = useState(true)
-  // useEffect(()=>{
-  //   axios.get(`http://localhost:3001/api/trips/${tripId}`)
-  //   .then((tripData)=>{
-  //     setTrip(tripData.data)
-  //   })
-  //   .catch((err)=>{
-  //     console.log(err)
-  //     navigate('/trips')
-  //   })
+  const t=useLoaderData()
+  const [trip, setTrip] = useState(t)
+  // type tripType={
+  //   _id:"",
+  //   title:"",
+  //   description:"",
+  //   start_date:"",
+  //   end_date:"",
+  //   total_capacity:0,
+  //   booked_by:[],
+  //   seller:""
+  // }
+  const [owner] = useState(t.seller._id==userData._id)
+  
 
-  // },[])
-  console.log("trip",trip)
-  useEffect(() => {
-    if (trips.length == 0)
-      setLoading(true)
-    else {
-      setLoading(true)
-      const clickedTrip = trips.filter((trip) => trip._id == tripId)[0]
-      console.log("clicked trip:", clickedTrip)
-      setTrip(clickedTrip)
-      console.log(trips)
-
-      if (userData.created_trips.map(t => t._id).includes(clickedTrip._id)) setOwner(true)
-      setLoading(false)
-    }
-  }, [trips])
+ 
+  // useEffect(() => {
+  
+  //     setLoading(true)
+  //     const clickedTrip = trips.find(t=> t._id == tripId)
+  //     setTrip(clickedTrip)
+  //     console.log("trip",clickedTrip)
+  //     setOwner(clickedTrip.seller._id==userData._id)
+  //     setLoading(false)
+    
+  // }, [trips])
 
 
   function bookTrip() {
@@ -105,35 +103,52 @@ function TripPage() {
         console.log(err)
       })
   }
-  console.log(trip)
-  if (loading) {
-    return "loading..."
-  } else {
+
+  function deleteTrip(){
+    if(!confirm("Do You want to delete the trip?")) return
+    axios.delete(`http://localhost:3001/api/trips/${trip._id}`,{withCredentials:true})
+    .then((res)=>{
+      console.log(res)
+      setUserData((prevUserData)=>{
+        prevUserData.created_trips=prevUserData.created_trips.filter((t)=>t._id!=trip._id)
+        return prevUserData
+      })
+      setTrips((prevTrips)=>{
+        return prevTrips.filter((t)=>t._id!=trip._id)
+      })
+      navigate('/seller_dashboard')
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
+  }
+
+  
     return (<div className="p-4">
-      <div className="card card-side border-2">
+      <div className="card lg:card-side border-2 ">
         <figure>
           <img src={tripImage}/>
         </figure>
         <div className="card-body"> 
         <h1 className="card-title">{trip.title}</h1>
-        {owner && <div className="absolute top-2 right-2">
-          <Dropdown size="" label="" inline renderTrigger={() => <button className="border-gray-500 border-2 rounded px-2"><GoKebabHorizontal /></button>}>
-            <Dropdown.Item>
-              <icon className="mr-1"><MdEdit /></icon>Edit
-            </Dropdown.Item>
-            <Dropdown.Item>
-              <icon className="mr-1 text-red-500"><MdDelete /></icon><span className="text-red-500 underline">Delete</span>
-            </Dropdown.Item>
-          </Dropdown>
-        </div>}
+        {owner && 
+          <div className="dropdown dropdown-hover dropdown-bottom dropdown-end absolute top-2 right-2">
+            <div tabIndex={0} role="button" className="btn btn-sm m-1"><GoKebabHorizontal /></div>
+            <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
+              <li><button onClick={()=>navigate(`/edit/trips/${trip._id}`)}><i className="mr-1"><MdEdit /></i>Edit</button></li>
+              <li><button onClick={deleteTrip}><i className="mr-1 text-red-500 inline-block"><MdDelete /></i><span className="inline-block text-red-500 underline">Delete</span></button></li>
+            </ul>
+          </div> }  
+       
+       
         <p> {trip.description}</p>
-        <p>Duration: {trip.duration}</p>
+        <p>Duration: {getDuration(trip)} days</p>
         <p>Start date: {getFormattedDate(trip.start_date)}</p>
         <p>End date: {getFormattedDate(trip.end_date)}</p>
         <p>Location: {trip.location}</p>
-        <p>Available tickets: {trip.available_tickets}</p>
+        <p>Available tickets: {getAvailableTickets(trip)}</p>
         <p>Price: <span className="font-bold">Rs.{trip.price}</span></p>
-        <p>Seller: <Link to={`/profile/${trip.seller?.username}`} className="link">{trip.seller.name}</Link></p>
+        {/* <p>Seller: <Link to={`/profile/${trip.seller?.username}`} className="link">{trip.seller.name}</Link></p> */}
         <div className="card-action">
         {trip?.booked_by.map((user)=>user._id).includes(userData._id) ? <button onClick={cancelTrip} className="link link-error">Cancel</button> : userData.role == "seller" ? <></> :availableTickets(trip)? <button onClick={bookTrip} className="btn btn-success text-white">Book</button>:<span>Full</span>}
         </div>
@@ -143,7 +158,7 @@ function TripPage() {
         <div className="border p-4 m-4">
 
 
-          {trip.booked_by.length <= 0 ? <spam className="text-red-400">Not yet booked</spam> :
+          {trip.booked_by.length <= 0 ? <span className="text-red-400">Not yet booked</span> :
             <>
               <h1>Booked by</h1>
               <div>
@@ -159,6 +174,6 @@ function TripPage() {
       }
     </div>)
   }
-}
+
 
 export default TripPage

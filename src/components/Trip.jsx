@@ -11,7 +11,7 @@ function Trip({trip}) {
     <>
        <div className="cursor-pointer card glass m-3">
             <figure>
-            <img src={tripImage} className='rounded-t'/>
+            <img src={trip.cover_image||tripImage} className='rounded-t'/>
             </figure>
             <div className='card-body'>
             <h2 className='card-title'>{trip.title}</h2>

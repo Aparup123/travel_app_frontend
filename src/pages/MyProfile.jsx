@@ -2,6 +2,7 @@ import { useContext, useEffect } from 'react'
 import { userContext } from '../contexts/userContext'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import { enqueueSnackbar } from 'notistack'
 function MyProfile() {
   const {userData, setUserData}= useContext(userContext)
   const navigate = useNavigate()
@@ -22,6 +23,7 @@ function MyProfile() {
 
         console.log(userClearObject)
         setUserData(userClearObject)
+        enqueueSnackbar('Logged out.', {variant:'success'})
         navigate('/login')
       })
       .catch((err) => {

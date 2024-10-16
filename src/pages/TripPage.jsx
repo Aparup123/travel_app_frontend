@@ -11,6 +11,7 @@ import tripImage from '../assets/images/tripImage.jpg'
 import getFormattedDate from "../utils/getFormattedDate"
 import getAvailableTickets from "../utils/getAvailableTickets"
 import getDuration from "../utils/getDuration"
+import { enqueueSnackbar } from "notistack"
 
 function TripPage() {
   const { userData, setUserData } = useContext(userContext)
@@ -77,9 +78,12 @@ function TripPage() {
             }
             return t;
         }));
+
+        enqueueSnackbar('Trip booked successfully', {variant:'success'})
       })
       .catch((err) => {
         console.log(err)
+        enqueueSnackbar('Trip booking failed!', {variant:'error'})
       })
   }
   // console.log("trip.booked_by:", trip.booked_by)
@@ -98,9 +102,11 @@ function TripPage() {
           }
           return t
         }))
+        enqueueSnackbar('Booking cancelled.',{variant:'success'})
       })
       .catch((err) => {
         console.log(err)
+        enqueueSnackbar('Failed!',{variant:'error'})
       })
   }
 
@@ -116,10 +122,12 @@ function TripPage() {
       setTrips((prevTrips)=>{
         return prevTrips.filter((t)=>t._id!=trip._id)
       })
+      enqueueSnackbar('Trip deleted.',{variant:'success'})
       navigate('/seller_dashboard')
     })
     .catch((err)=>{
       console.log(err)
+      enqueueSnackbar('Trip deletion failed!',{variant:'error'})
     })
   }
 
@@ -127,7 +135,7 @@ function TripPage() {
     return (<div className="p-4">
       <div className="card lg:card-side border-2 ">
         <figure>
-          <img src={tripImage}/>
+          <img src={trip.cover_image||tripImage}/>
         </figure>
         <div className="card-body"> 
         <h1 className="card-title">{trip.title}</h1>

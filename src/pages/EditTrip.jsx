@@ -8,6 +8,7 @@ import { tripContext } from "../contexts/tripContext"
 import getCurrentDate from "../utils/getCurrentDate"
 import getDashedDate from "../utils/getDashedDate"
 import getBookedTicketNumber from "../utils/getBookedTicketNumber"
+import { useSnackbar } from "notistack"
 
 
 
@@ -18,6 +19,7 @@ export default function EditTrip() {
   const [trip, setTrip] = useState(t)
   const { userData, setUserData } = useContext(userContext)
   const {setTrips } = useContext(tripContext)
+  const {enqueueSnackbar}=useSnackbar()
   const navigate = useNavigate()
   console.log(tripImage)
   useEffect(() => {
@@ -37,10 +39,12 @@ export default function EditTrip() {
       setTrips((prevTrips)=>{
         return prevTrips.filter((t)=>t._id!=trip._id).concat(res.data)
         })
+      enqueueSnackbar("Trip updated successfully", {variant:'success'})
       navigate(`/trips/${trip._id}`)
     })
     .catch((err)=>{
       console.log(err)
+      enqueueSnackbar("Failed to update trip", {variant:'error'})
     })
   }
 

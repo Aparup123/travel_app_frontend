@@ -6,11 +6,13 @@ import { Label, FileInput, } from "flowbite-react"
 import axios from "axios"
 import { tripContext } from "../contexts/tripContext"
 import getCurrentDate from "../utils/getCurrentDate"
+import { useSnackbar } from "notistack"
+
 
 
 
 export default function CreateTrip() {
-  const [tripImage, setTripImage]=useState()
+  const [tripImage, setTripImage]=useState(null)
   const [trip, setTrip] = useState({
     title: "",
     description: "",
@@ -19,9 +21,11 @@ export default function CreateTrip() {
     location: "",
     total_capacity: "",
     price:0.0,
+    cover_image:""
   })
   const { userData, setUserData } = useContext(userContext)
   const { trips, setTrips } = useContext(tripContext)
+  const {enqueueSnackbar}=useSnackbar()
   const navigate = useNavigate()
   console.log(tripImage)
   useEffect(() => {
@@ -31,19 +35,45 @@ export default function CreateTrip() {
   })
   console.log(trip)
 
-  function createTrip(e){
+  async function uploadTripImage(){
+    if(!tripImage) return 
+
+    const data=new FormData()
+    data.append('enctype', 'multipart/form-data')
+    data.append('file',tripImage)
+    try{
+      const res=await axios.post(`http://localhost:3001/api/trips/image`, data, {withCredentials:true})
+      console.log(res.data.secure_url)
+      return res.data.secure_url
+    }catch(err){
+      console.log(err)
+      return null
+    }
+  }
+
+  async function createTrip(e){
     e.preventDefault()
-    console.log(trip)
-    axios.post("http://localhost:3001/api/trips/", trip, {withCredentials:true})
-    .then((res)=>{
+
+    //upload trip image to cloudinary
+    const imageLink=await uploadTripImage()
+    if(!imageLink){
+      enqueueSnackbar("Image upload failed!",{variant:'error'})
+      return 
+    }
+    enqueueSnackbar('image uploaded successfully', {variant:"success"})
+    console.log(trip) 
+    trip.cover_image=imageLink
+    try{
+      const res=await axios.post("http://localhost:3001/api/trips/", trip, {withCredentials:true})
       console.log(res)
       setUserData({...userData, created_trips:userData.created_trips.concat(res.data)})
       setTrips(trips.concat(res.data))
+      enqueueSnackbar("Trip created", {variant:'success'})
       navigate('/seller_dashboard')
-    })
-    .catch((err)=>{
+    }catch(err){
       console.log(err)
-    })
+      enqueueSnackbar("Failed creating trip!", {variant:'error'})
+    }
   }
 
   return (
@@ -92,8 +122,9 @@ export default function CreateTrip() {
                   </p>
                   <p className="text-xs text-gray-500 dark:text-gray-400">upload trip cover image</p>
                 </div>:<img src={URL.createObjectURL(tripImage)} className="h-[5rem] w-auto"/>}
-                <FileInput id="dropzone-file" className="hidden" onChange={(e)=>{setTripImage(e.target.files[0])}}/>
-            </Label>  
+                <FileInput id="dropzone-file" className="hidden" onChange={(e)=>{setTripImage(e.target.files[0])}} accept="image/*"/>
+            </Label>
+            <button onClick={uploadTripImage}>upload</button>  
           </div>
           <div></div>
           <button type="submit" className=" rounded text-gray-500 hover:text-black border-2 border-blue-500 hover:border-blue-600">Create</button>

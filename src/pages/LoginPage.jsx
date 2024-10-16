@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { userContext } from "../contexts/userContext";
 import FormValidationError from "../components/FormValidationError";
+import { enqueueSnackbar } from "notistack";
 
 
 function LoginPage() {
@@ -56,10 +57,12 @@ function LoginPage() {
       .then((res) => {
         console.log(res.data);
         setUserData(res.data);
+        enqueueSnackbar('Logged in successfully.', {variant:'success'})
         navigate(-1);
       })
       .catch((err) => {
         console.log(err);
+        enqueueSnackbar('Failed to login! Try again.', {variant:'error'})
       });
   }
   return (

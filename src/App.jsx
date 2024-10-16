@@ -19,6 +19,7 @@ import userProfileLoader from './utils/loaders/userProfileLoader'
 import EditTrip from './pages/EditTrip'
 import editTripLoader from './utils/loaders/editTripLoader'
 import tripPageLoader from './utils/loaders/tripPageLoader'
+import { SnackbarProvider } from 'notistack'
 // import tripPageLoader from './utils/loaders/tripPageLoader'
 
 const router=createBrowserRouter([
@@ -114,9 +115,11 @@ function App() {
   return (
     <userContext.Provider value={{userData, setUserData}}>
       <tripContext.Provider value={{trips, setTrips}}>
-        <div className='font-poppins'>
-          <RouterProvider router={router}/>
-        </div>
+        <SnackbarProvider autoHideDuration={3000}>
+          <div className='font-poppins'>
+            <RouterProvider router={router}/>
+          </div>
+        </SnackbarProvider>
       </tripContext.Provider>
     </userContext.Provider>
   )

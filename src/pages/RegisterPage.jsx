@@ -2,9 +2,9 @@ import { useContext, useEffect, useState } from "react"
 import { userContext } from "../contexts/userContext"
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
-import registerImage from '../assets/images/register.jpg'
 import { FaGoogle, FaFacebookF } from 'react-icons/fa'
 import { ToggleSwitch } from "flowbite-react"
+import { enqueueSnackbar } from "notistack"
 
 function RegisterPage() {
   const { userData, setUserData } = useContext(userContext)
@@ -41,9 +41,11 @@ function RegisterPage() {
     }).then((res) => {
       console.log(res.data)
       setUserData(res.data)
+      enqueueSnackbar('Registered successfully.', {variant:'success'})
       navigate('/trips')
     }).catch((err) => {
       console.log(err)
+      enqueueSnackbar('Registration failed!', {variant:'error'})
     })
   }
   return (

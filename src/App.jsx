@@ -89,7 +89,7 @@ function App() {
     const [userData, setUserData]=useState({name:"", username:"", email:"", booked_trips:[], created_trips:[]})
     const [trips, setTrips]=useState([])
     useEffect(() => {
-        axios.get('http://localhost:3001/api/users/profile', {withCredentials:true})
+        axios.get(`${import.meta.env.VITE_SITE_URL}/api/users/profile`, {withCredentials:true})
         .then((res)=>{
             console.log(res.data)
             setUserData(res.data)
@@ -101,7 +101,7 @@ function App() {
         })
 
          // fetch trips
-         axios.get("http://localhost:3001/api/trips")
+         axios.get(`${import.meta.env.VITE_SITE_URL}/api/trips`)
          .then((res)=>{
            setTrips(res.data)
          })

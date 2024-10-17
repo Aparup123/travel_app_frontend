@@ -53,7 +53,7 @@ function TripPage() {
     if (!confirmedBooking) {
       return
     }
-    axios.post(`http://localhost:3001/api/trips/book/${trip._id}`, null, { withCredentials: true })
+    axios.post(`${import.meta.env.VITE_SITE_URL}/api/trips/book/${trip._id}`, null, { withCredentials: true })
       .then((res) => {
         console.log(res.data);
         // Update userData to include the newly booked trip
@@ -90,7 +90,7 @@ function TripPage() {
   function cancelTrip() {
     if (!confirm('Do you want to cancel the trip?'))
       return
-    axios.delete(`http://localhost:3001/api/users/trips/${trip._id}`, { withCredentials: true })
+    axios.delete(`${import.meta.env.VITE_SITE_URL}/api/users/trips/${trip._id}`, { withCredentials: true })
       .then((res) => {
         console.log(res.data)
         setUserData({ ...userData, booked_trips: userData.booked_trips.filter((t) => t._id != res.data._id) })
@@ -112,7 +112,7 @@ function TripPage() {
 
   function deleteTrip(){
     if(!confirm("Do You want to delete the trip?")) return
-    axios.delete(`http://localhost:3001/api/trips/${trip._id}`,{withCredentials:true})
+    axios.delete(`${import.meta.env.VITE_SITE_URL}/api/trips/${trip._id}`,{withCredentials:true})
     .then((res)=>{
       console.log(res)
       setUserData((prevUserData)=>{

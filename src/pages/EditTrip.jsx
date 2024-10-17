@@ -9,10 +9,12 @@ import getCurrentDate from "../utils/getCurrentDate"
 import getDashedDate from "../utils/getDashedDate"
 import getBookedTicketNumber from "../utils/getBookedTicketNumber"
 import { useSnackbar } from "notistack"
+import Button from "../components/Button"
 
 
 
 export default function EditTrip() {
+  const [loading, setLoading] = useState(false);
   const [tripImage, setTripImage]=useState()
   const t=useLoaderData()
   console.log(t)
@@ -31,8 +33,9 @@ export default function EditTrip() {
 
   function editTrip(e){
     e.preventDefault()
+    setLoading(true)
     console.log(trip)
-    axios.put(`http://localhost:3001/api/trips/${trip._id}`, trip, {withCredentials:true})
+    axios.put(`${import.meta.env.VITE_SITE_URL}/api/trips/${trip._id}`, trip, {withCredentials:true})
     .then((res)=>{
       console.log(res)
       setUserData({...userData, created_trips:userData.created_trips.filter((t)=>t._id!=trip._id).concat(res.data)})
@@ -45,6 +48,9 @@ export default function EditTrip() {
     .catch((err)=>{
       console.log(err)
       enqueueSnackbar("Failed to update trip", {variant:'error'})
+    })
+    .finally(()=>{
+      setLoading(false)
     })
   }
 
@@ -98,7 +104,7 @@ export default function EditTrip() {
             </Label>  
           </div>
           <div></div>
-          <button type="submit" className="btn btn-outline ">Update</button>
+          <Button type="submit" loading={loading}>Update</Button>
         </form>
       </div>
     </div>

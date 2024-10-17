@@ -7,7 +7,7 @@ function TripsPage() {
     const {trips}=useContext(tripContext)
     // const [trips, setTrips]= useState([])
     // useEffect(()=>{
-    //     axios.get('http://localhost:3001/api/trips')
+    //     axios.get(`${import.meta.env.VITE_SITE_URL}/api/trips`)
     //     .then((res)=>{
     //         console.log(res)
     //         setTrips(res.data)

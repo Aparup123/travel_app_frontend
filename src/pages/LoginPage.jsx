@@ -51,7 +51,7 @@ function LoginPage() {
       return;
     }
     axios
-      .post("http://localhost:3001/api/users/login", body, {
+      .post(`${import.meta.env.VITE_SITE_URL}/api/users/login`, body, {
         withCredentials: true,
       })
       .then((res) => {

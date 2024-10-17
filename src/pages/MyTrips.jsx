@@ -34,7 +34,10 @@ export default function MyTrips() {
           })}
         </tbody>
       </table>:
-      <div>You have not booked any trips</div>
+      <div className="flex flex-col items-center gap-4 mt-4 ">
+        <h1 className="text-5xl block" >You dont' have any booked trips!</h1>
+        <h3 className="text-xl block">book a trip and come back to see.</h3>
+      </div>
     }
     </div>
   )

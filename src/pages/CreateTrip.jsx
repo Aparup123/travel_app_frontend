@@ -168,12 +168,12 @@ export default function CreateTrip() {
               setTrip({ ...trip, price: e.target.value });
             }}
           />
-          <label htmlFor="uploadImage" className="block">
+          <label htmlFor="uploadImage" className="block mt-2">
             Upload trip cover image
           </label>
           <div
             id="uploadImage"
-            className="flex w-full items-center justify-center"
+            className="flex w-full items-center justify-center mb-2"
           >
             <Label
               htmlFor="dropzone-file"
@@ -219,20 +219,17 @@ export default function CreateTrip() {
                 accept="image/*"
               />
             </Label>
-            <button onClick={uploadTripImage}>upload</button>
           </div>
           <div></div>
           <button
             type="submit"
-            className="btn btn-neutral btn-sm py-1"
+            className="btn btn-neutral btn-sm btn-block py-1"
             disabled={loading}
           >
             {loading?<span> <span className="loading loading-bars loading-sm "></span></span>:<p>Create</p>} 
           </button>
           
         </form>
-        <button onClick={()=>setLoading(true)}>on</button>
-          <button onClick={()=>setLoading(false)}>off</button>
       </div>
     </div>
   );

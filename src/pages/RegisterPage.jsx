@@ -6,8 +6,10 @@ import { FaGoogle, FaFacebookF } from "react-icons/fa";
 import { ToggleSwitch } from "flowbite-react";
 import { enqueueSnackbar } from "notistack";
 import { useForm } from "react-hook-form";
+import Button from "../components/Button";
 
 function RegisterPage() {
+  const [loading, setLoading]=useState(false)
   const {
     register,
     handleSubmit,
@@ -42,16 +44,12 @@ function RegisterPage() {
   //     : setUser({ ...user, role: "user" });
   // }, [isSeller]);
 
-  function onSubmit(data) {
-    console.log(data);
-    console.log(errors);
-  }
-
   function registerUser(user) {
     isSeller
       ? user.role="seller"
       : user.role="user" ;
     console.log("user:", user)
+    setLoading(true)
     axios.post(`${import.meta.env.VITE_SITE_URL}/api/users/register`, user, {
         withCredentials: true,
       })
@@ -64,7 +62,10 @@ function RegisterPage() {
       .catch((err) => {
         console.log(err);
         enqueueSnackbar("Registration failed!", { variant: "error" });
-      });
+      })
+      .finally(()=>{
+        setLoading(false)
+      })
   }
   return (
     <>
@@ -87,7 +88,7 @@ function RegisterPage() {
                   className="float-right"
                 />
               </div>
-              <label htmlFor="name" className="mb-1">
+              <label htmlFor="name" className="label-text">
                 Name
               </label>
               {errors?.name && (
@@ -97,12 +98,12 @@ function RegisterPage() {
               )}
               <input
                 id="name"
-                className="border p-1 px-2 mb-2 text-sm"
-                {...register("name", { required: "Name is required" })}
+                className="input input-bordered input-sm mb-2"
+                {...register("name", { required: "Can't be empty!" })}
                 type="text"
                 placeholder=""
               />
-              <label htmlFor="username" className="mb-1">
+              <label htmlFor="username" className="label-text">
                 Username
               </label>
               {errors?.username && (
@@ -112,9 +113,9 @@ function RegisterPage() {
               )}
               <input
                 id="username"
-                className="border p-1 px-2 mb-2 text-sm"
+                className="input input-bordered input-sm mb-2"
                 {...register("username", {
-                  required: "Username cannot be empty!",
+                  required: "Can't be empty!",
                   minLength: {
                     value: 3,
                     message: "At least 3 character long ",
@@ -124,7 +125,7 @@ function RegisterPage() {
                 type="text"
                 placeholder=""
               />
-              <label htmlFor="age" className="mb-1">
+              <label htmlFor="age" className="label-text">
                 Age
               </label>
               {errors?.age && (
@@ -134,12 +135,12 @@ function RegisterPage() {
               )}
               <input
                 id="age"
-                className="border p-1 px-2 mb-2 text-sm"
-                {...register('age',{required:"age is required"})}
+                className="input input-bordered input-sm mb-2"
+                {...register('age',{required:"Can't be empty!"})}
                 type="number"
                 placeholder=""
               />
-              <label htmlFor="age" className="mb-1">
+              <label htmlFor="age" className="label-text">
                 Email
               </label>
               {errors?.email && (
@@ -148,12 +149,12 @@ function RegisterPage() {
                 </p>
               )}
               <input
-                className="border p-1 px-2 mb-2 text-sm"
-                {...register("email", { required: "Email is required" })}
+                className="input input-bordered input-sm mb-2"
+                {...register("email", { required: "Can't be empty!" })}
                 type="email"
                 placeholder=""
               />
-              <label htmlFor="age" className="mb-1">
+              <label htmlFor="age" className="label-text">
                 Password
               </label>
               {errors?.password && (
@@ -162,9 +163,9 @@ function RegisterPage() {
                 </p>
               )}
               <input
-                className="border p-1 px-2 mb-2 text-sm"
+                className="input input-bordered input-sm mb-2"
                 {...register("password", {
-                  required: "Password is required",
+                  required: "Can't be empty!",
                   minLength: {
                     value: 4,
                     message: "Password must be at least 4 character long",
@@ -175,7 +176,7 @@ function RegisterPage() {
               />
               {isSeller && (
                 <>
-                  <label htmlFor="org_name" className="mb-1">
+                  <label htmlFor="org_name" className="label-text">
                     Organization name
                   </label>
                   {errors?.org_name && (
@@ -184,14 +185,14 @@ function RegisterPage() {
                     </p>
                   )}
                   <input
-                    className="border p-1 px-2 mb-2 text-sm"
+                    className="input input-bordered input-sm mb-2"
                     {...register("org_name", {
-                      required: { value: isSeller, message: "Required" },
+                      required: { value: isSeller, message: "Can't be empty!" },
                     })}
                     type="text"
                     placeholder=""
                   />
-                  <label htmlFor="org_location" className="mb-1">
+                  <label htmlFor="org_location" className="label-text">
                     Organization location
                   </label>
                   {errors?.org_location && (
@@ -200,20 +201,21 @@ function RegisterPage() {
                     </p>
                   )}
                   <input
-                    className="border p-1 px-2 mb-2 text-sm"
-                    {...register('org_location',{required:{value:isSeller,message:"Required"}})}
+                    className="input input-bordered input-sm mb-2"
+                    {...register('org_location',{required:{value:isSeller,message:"Can't be empty!"}})}
                     type="text"
                     placeholder=""
                   />
                 </>
               )}
-              <button
+              {/* <button
                 className="border-2 rounded border-blue-400 bg-blue-500 py-1 text-white mt-2 mb-4"
                 type="submit"
               >
                 Register
-              </button>
-              <span className="block text-center mb-2">or signup with...</span>
+              </button> */}
+              <Button loading={loading} type="submit" className="my-2">Register</Button>
+              <span className="block text-center mb-2 mt-2">or signup with...</span>
               <div className="flex justify-center gap-2">
                 <i className="text-xl border-2 p-1 rounded-full inline-block">
                   <FaGoogle />

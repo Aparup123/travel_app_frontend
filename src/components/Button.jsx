@@ -1,10 +1,10 @@
 
 // eslint-disable-next-line react/prop-types
-export default function Button({loading, children, type, onClick}){
+export default function Button({loading, children, type, onClick, className}){
     return (
         <button
             type={type}
-            className="btn btn-neutral btn-sm py-1"
+            className={`btn btn-neutral py-1 ${className}`}
             disabled={loading}
             onClick={onClick}
           >

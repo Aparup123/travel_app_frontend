@@ -1,7 +1,7 @@
 
 import { useContext} from "react";
 import { userContext } from "../contexts/userContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function SellerDashboard() {
     const {userData}=useContext(userContext)
@@ -24,19 +24,19 @@ export default function SellerDashboard() {
           </th> */}
           </tr>
         </thead>
-        <tbody className="divide-y">
+        <tbody className="">
             {
-                userData.created_trips.map((trip)=>{return <tr key={trip._id} onClick={()=>{navigate(`/trips/${trip._id}`)}} className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                    <td className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                userData.created_trips.map((trip)=>{return <tr key={trip._id} onClick={()=>{navigate(`/trips/${trip._id}`)}} >
+                    <td className="whitespace-nowrap font-medium">
                     {trip.title}
                     </td>
                     <td>{trip.booked_by.length}/{trip.total_capacity}</td>
                     <td>Rs. {trip.price}</td>
                     <td>{trip.location}</td>
                     <td>
-                    <a href="#" className="font-medium text-cyan-600 hover:underline dark:text-cyan-500">
+                    <Link to={`/edit/trips/${trip._id}`} className="font-medium text-cyan-600 hover:underline dark:text-cyan-500">
                         Edit
-                    </a>
+                    </Link>
                     </td>
                 </tr>})
                 

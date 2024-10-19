@@ -1,7 +1,6 @@
 import { useState, useContext, useEffect } from "react";
 import { userContext } from "../contexts/userContext";
 import { useNavigate } from "react-router-dom";
-import { Label, FileInput } from "flowbite-react";
 
 import axios from "axios";
 import { tripContext } from "../contexts/tripContext";
@@ -45,8 +44,8 @@ export default function CreateTrip() {
         data,
         { withCredentials: true }
       );
-      console.log(res.data.secure_url);
-      return res.data.secure_url;
+      console.log(res.data);
+      return {pid:res.data.public_id,url:res.data.secure_url};
     } catch (err) {
       console.log(err);
       return null;
@@ -61,14 +60,14 @@ export default function CreateTrip() {
     //upload trip image to cloudinary
 
     try {
-      const imageLink = await uploadTripImage();
-      if (!imageLink) {
+      const coverImage = await uploadTripImage();
+      if (!coverImage) {
         enqueueSnackbar("Image upload failed!", { variant: "error" });
         return;
       }
       enqueueSnackbar("image uploaded successfully", { variant: "success" });
       console.log(trip);
-      trip.cover_image = imageLink;
+      trip.cover_image = coverImage;
       const res = await axios.post(
         `${import.meta.env.VITE_SITE_URL}/api/trips/`,
         trip,
@@ -91,9 +90,9 @@ export default function CreateTrip() {
   }
 
   return (
-    <div className="flex justify-center">
-      <div className="border p-4 mt-6 inline-block   ">
-        <h1 className="text-2xl mb-2">Create trip</h1>
+    <div className="flex justify-center p-4">
+      <div className="border p-4 rounded-lg inline-block   ">
+        <h1 className="text-2xl mb-6">Create trip</h1>
         <form className="md:grid grid-cols-2 gap-y-3" onSubmit={createTrip}>
           <label htmlFor="trip_title" className="block">
             Trip Title
@@ -101,7 +100,7 @@ export default function CreateTrip() {
           <input
             type="text"
             id="trip_title"
-            className="p-0"
+            className="input input-bordered"
             onChange={(e) => {
               setTrip({ ...trip, title: e.target.value });
             }}
@@ -112,6 +111,7 @@ export default function CreateTrip() {
           <input
             id="location"
             type="text"
+            className="input input-bordered"
             onChange={(e) => {
               setTrip({ ...trip, location: e.target.value });
             }}
@@ -121,6 +121,7 @@ export default function CreateTrip() {
           </label>
           <textarea
             id="description"
+            className="textarea textarea-bordered"
             onChange={(e) => {
               setTrip({ ...trip, description: e.target.value });
             }}
@@ -131,6 +132,7 @@ export default function CreateTrip() {
           <input
             id="start_date"
             type="date"
+            className="input input-bordered"
             min={getCurrentDate()}
             onChange={(e) => {
               setTrip({ ...trip, start_date: e.target.value });
@@ -142,6 +144,7 @@ export default function CreateTrip() {
           <input
             id="end_date"
             type="date"
+            className="input input-bordered"
             disabled={trip.start_date ? false : true}
             min={trip.start_date}
             onChange={(e) => {
@@ -154,6 +157,7 @@ export default function CreateTrip() {
           <input
             id="capacity"
             type="number"
+            className="input input-bordered"
             onChange={(e) => {
               setTrip({ ...trip, total_capacity: e.target.value });
             }}
@@ -164,6 +168,7 @@ export default function CreateTrip() {
           <input
             id="price"
             type="number"
+            className="input input-bordered"
             onChange={(e) => {
               setTrip({ ...trip, price: e.target.value });
             }}
@@ -175,7 +180,7 @@ export default function CreateTrip() {
             id="uploadImage"
             className="flex w-full items-center justify-center mb-2"
           >
-            <Label
+            <label
               htmlFor="dropzone-file"
               className="flex w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:border-gray-500 dark:hover:bg-gray-600"
             >
@@ -210,7 +215,8 @@ export default function CreateTrip() {
                   className="h-[5rem] w-auto"
                 />
               )}
-              <FileInput
+              <input
+                type="file"
                 id="dropzone-file"
                 className="hidden"
                 onChange={(e) => {
@@ -218,7 +224,7 @@ export default function CreateTrip() {
                 }}
                 accept="image/*"
               />
-            </Label>
+            </label>
           </div>
           <div></div>
           <button

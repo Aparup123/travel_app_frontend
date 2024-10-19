@@ -1,5 +1,5 @@
 import { useContext,useState } from "react"
-import {useLoaderData, useNavigate, useParams } from "react-router-dom"
+import {Link, useLoaderData, useNavigate, useParams } from "react-router-dom"
 import axios from "axios"
 import { userContext } from "../contexts/userContext"
 import { tripContext } from "../contexts/tripContext"
@@ -12,8 +12,11 @@ import getFormattedDate from "../utils/getFormattedDate"
 import getAvailableTickets from "../utils/getAvailableTickets"
 import getDuration from "../utils/getDuration"
 import { enqueueSnackbar } from "notistack"
+import Button from "../components/Button"
+import LoadingLink from "../components/LoadingLink"
 
 function TripPage() {
+  const [loading, setLoading]=useState(false)
   const { userData, setUserData } = useContext(userContext)
   const { trips, setTrips } = useContext(tripContext)
   const navigate = useNavigate()
@@ -53,6 +56,7 @@ function TripPage() {
     if (!confirmedBooking) {
       return
     }
+    setLoading(true)
     axios.post(`${import.meta.env.VITE_SITE_URL}/api/trips/book/${trip._id}`, null, { withCredentials: true })
       .then((res) => {
         console.log(res.data);
@@ -85,11 +89,15 @@ function TripPage() {
         console.log(err)
         enqueueSnackbar('Trip booking failed!', {variant:'error'})
       })
+      .finally(()=>{
+        setLoading(false)
+      })
   }
   // console.log("trip.booked_by:", trip.booked_by)
   function cancelTrip() {
     if (!confirm('Do you want to cancel the trip?'))
       return
+    setLoading(true)
     axios.delete(`${import.meta.env.VITE_SITE_URL}/api/users/trips/${trip._id}`, { withCredentials: true })
       .then((res) => {
         console.log(res.data)
@@ -108,10 +116,12 @@ function TripPage() {
         console.log(err)
         enqueueSnackbar('Failed!',{variant:'error'})
       })
+      .finally(()=>setLoading(false))
   }
 
   function deleteTrip(){
     if(!confirm("Do You want to delete the trip?")) return
+    setLoading(true)
     axios.delete(`${import.meta.env.VITE_SITE_URL}/api/trips/${trip._id}`,{withCredentials:true})
     .then((res)=>{
       console.log(res)
@@ -129,13 +139,16 @@ function TripPage() {
       console.log(err)
       enqueueSnackbar('Trip deletion failed!',{variant:'error'})
     })
+    .finally(()=>{
+      setLoading(false)
+    })
   }
 
   
     return (<div className="p-4">
-      <div className="card lg:card-side border-2 ">
-        <figure>
-          <img src={trip.cover_image||tripImage}/>
+      <div className="card md:card-side border-2 md:max-h-[30rem] lg">
+        <figure className="md:w-2/5 h-auto">
+          <img src={trip.cover_image?.url||tripImage} className="w-full h-auto object-cover"/>
         </figure>
         <div className="card-body"> 
         <h1 className="card-title">{trip.title}</h1>
@@ -143,11 +156,11 @@ function TripPage() {
           <div className="dropdown dropdown-hover dropdown-bottom dropdown-end absolute top-2 right-2">
             <div tabIndex={0} role="button" className="btn btn-sm m-1"><GoKebabHorizontal /></div>
             <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
-              <li><button onClick={()=>navigate(`/edit/trips/${trip._id}`)}><i className="mr-1"><MdEdit /></i>Edit</button></li>
-              <li><button onClick={deleteTrip}><i className="mr-1 text-red-500 inline-block"><MdDelete /></i><span className="inline-block text-red-500 underline">Delete</span></button></li>
+              <li><Link to={`/edit/trips/${trip._id}`}><i className="mr-1"><MdEdit /></i>Edit</Link></li>
+              <li><LoadingLink loading={loading} onClick={deleteTrip}><i className="mr-1 text-red-500 inline-block"><MdDelete /></i><span className="inline-block text-red-500 underline">Delete</span></LoadingLink></li>
             </ul>
           </div> }  
-       
+          {/* onClick={()=>navigate(`/edit/trips/${trip._id}`)} */}
        
         <p> {trip.description}</p>
         <p>Duration: {getDuration(trip)} days</p>
@@ -158,7 +171,7 @@ function TripPage() {
         <p>Price: <span className="font-bold">Rs.{trip.price}</span></p>
         {/* <p>Seller: <Link to={`/profile/${trip.seller?.username}`} className="link">{trip.seller.name}</Link></p> */}
         <div className="card-action">
-        {trip?.booked_by.map((user)=>user._id).includes(userData._id) ? <button onClick={cancelTrip} className="link link-error">Cancel</button> : userData.role == "seller" ? <></> :availableTickets(trip)? <button onClick={bookTrip} className="btn btn-success text-white">Book</button>:<span>Full</span>}
+        {trip?.booked_by.map((user)=>user._id).includes(userData._id) ? <LoadingLink onClick={cancelTrip} loading={loading} className="link-error">Cancel</LoadingLink> : userData.role == "seller" ? <></> :availableTickets(trip)? <Button onClick={bookTrip} className="btn btn-success text-white" loading={loading}>Book</Button>:<span>Full</span>}
         </div>
         </div>
       </div>

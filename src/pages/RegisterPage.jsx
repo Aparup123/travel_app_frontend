@@ -23,6 +23,7 @@ function RegisterPage() {
     if (userData.username) {
       navigate("/profile");
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
 
@@ -73,7 +74,7 @@ function RegisterPage() {
         <div className="flex border rounded mt-5 mb-5">
           <div className="py-4">
             <div className="mb-4">
-              <h2 className="text-center text-2xl">Register and get ready</h2>
+              <h2 className="text-center text-2xl font-bold ">Register and get ready</h2>
             </div>
             <form
               onSubmit={handleSubmit(registerUser)}

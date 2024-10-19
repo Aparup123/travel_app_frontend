@@ -10,12 +10,12 @@ function Trip({trip}) {
   return (
     <>
        <div className="cursor-pointer card glass m-3">
-            <figure>
-            <img src={trip.cover_image||tripImage} className='rounded-t'/>
+            <figure className='max-h-[15rem]'>
+              <img src={trip.cover_image?.url||tripImage} className='rounded-t w-full h-auto object-cover'/>
             </figure>
             <div className='card-body'>
             <h2 className='card-title'>{trip.title}</h2>
-            <p>{trip.description.length>80?trip.description.substring(0,80)+" ...":trip.description}</p>
+            <p>{trip.description.length>50?trip.description.substring(0,50)+" ...":trip.description}</p>
             <p><span className='font-bold'>Duration:</span> {getDuration(trip)} days</p>
             <p><span className='font-bold'>Date:</span> {getFormattedDate(trip.start_date)} - {getFormattedDate(trip.end_date)} </p>
             <p><span className='font-bold'>Location:</span> {trip.location}</p>

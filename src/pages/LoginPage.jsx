@@ -74,11 +74,11 @@ function LoginPage() {
       })
   }
   return (
-    <div className="flex justify-center p-4 text-gray-900">
+    <div className="flex justify-center p-4">
       <div className="border-2 rounded-md ">
         <div className="flex flex-col items-center ">
           <h1 className="text-3xl font-bold text-center p-4">Hey, welcome  </h1>
-          <h2 className="text-xl text-gray-800">login and manage your trips</h2>
+          <h2 className="text-xl ">login and manage your trips</h2>
         </div>
         <form
           onSubmit={handleLogin}

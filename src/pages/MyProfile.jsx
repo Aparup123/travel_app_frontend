@@ -21,6 +21,7 @@ function MyProfile() {
 
   async function uploadProfileImage(){
     try{
+      setLoading(true)
       const data=new FormData()
       data.append('file', userImage)
       const res=await axios.post(`${import.meta.env.VITE_SITE_URL}/api/users/profile/image`, data, {withCredentials:true})
@@ -29,6 +30,9 @@ function MyProfile() {
     }catch(err){
       enqueueSnackbar('Upload failed', {variant:'error'})
       console.log(err)
+    }finally{
+      document.getElementById('my_modal_3').close()
+      setLoading(false)
     }
   }
 
@@ -53,23 +57,23 @@ function MyProfile() {
       })
   }
   return (
-    <div className='flex flex-col items-center p-2'>
+    <div className='flex justify-center p-2'>
       <dialog id="my_modal_3" className="modal">
         <div className="modal-box">
           <form method="dialog">
             {/* if there is a button in form, it will close the modal */}
             <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
           </form>
-          <label htmlFor="uploadImage" className="block mt-2 mb-4">
+          <h1 htmlFor="uploadImage" className="block font-bold text-xl text-center  mt-2 mb-4">
             Upload profile picture
-          </label>
+          </h1>
           <div
             id="uploadImage"
             className="flex w-full items-center justify-center mb-2"
           >
             <label
               htmlFor="dropzone-file"
-              className="flex w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+              className="flex w-2/3 min-h-40 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:border-gray-500 dark:hover:bg-gray-600"
             >
               {!userImage ? (
                 <div className="flex flex-col items-center justify-center pb-6 pt-5">
@@ -113,13 +117,16 @@ function MyProfile() {
               />
             </label>
           </div>
-          <Button onClick={uploadProfileImage}>save</Button>
+          <div className='flex justify-end pt-4'>
+          <Button onClick={uploadProfileImage} loading={loading}>save</Button>
+          </div>
         </div>
       </dialog>
-      <div className='border p-4 mt-2'>
-        <div className=''>
-        <button className="btn" onClick={() => document.getElementById('my_modal_3').showModal()}><BiEdit/></button>
+      <div className='card glass p-4 mt-2'>
+        <div className='flex flex-col gap-2'>
+        
           <div className="avatar flex justify-center text-center">
+          <button className="absolute bottom-0 right-12 bg-neutral text-2xl" onClick={() => document.getElementById('my_modal_3').showModal()}><BiEdit/></button>
             <div className="w-24 text-center block rounded-full">
               <img src={userData.profile_picture?userData.profile_picture.url:"https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"} />
             </div>

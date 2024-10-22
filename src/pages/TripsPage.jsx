@@ -38,7 +38,7 @@ function TripsPage() {
   }
   return (
     <>
-      <div className="p-2 top-[3rem] z-10">
+      <div className="p-4 top-[3rem] z-10">
         <span className="sm:block md:inline-block"><TextInput placeholder="Search" icon={CiSearch} onChange={search}></TextInput></span>
       </div>
       <div className="md:grid lg:grid-cols-4 md:grid-cols-3">

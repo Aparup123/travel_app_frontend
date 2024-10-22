@@ -116,7 +116,7 @@ function App() {
     <userContext.Provider value={{userData, setUserData}}>
       <tripContext.Provider value={{trips, setTrips}}>
         <SnackbarProvider autoHideDuration={3000}>
-          <div className='font-poppins'>
+          <div className='font-poppins' >
             <RouterProvider router={router}/>
           </div>
         </SnackbarProvider>

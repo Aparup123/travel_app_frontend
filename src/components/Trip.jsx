@@ -1,9 +1,9 @@
 /* eslint-disable react/prop-types */
 
-import tripImage from '../assets/images/tripImage.jpg'
 import getAvailableTickets from '../utils/getAvailableTickets'
 import getDuration from '../utils/getDuration'
 import getFormattedDate from '../utils/getFormattedDate'
+import tripImagePlaceholder from '../assets/images/tripImagePlaceholder.png'
 
 function Trip({trip}) {
 
@@ -11,7 +11,7 @@ function Trip({trip}) {
     <>
        <div className="cursor-pointer card glass m-3">
             <figure className='max-h-[15rem]'>
-              <img src={trip.cover_image?.url||tripImage} className='rounded-t w-full h-auto object-cover'/>
+              <img src={trip.cover_image?.url||tripImagePlaceholder} className='rounded-t w-full h-auto object-cover'/>
             </figure>
             <div className='card-body'>
             <h2 className='card-title'>{trip.title}</h2>

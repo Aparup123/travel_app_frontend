@@ -1,6 +1,6 @@
 import {useState } from 'react'
 import {useLoaderData} from 'react-router-dom'
-
+import profilePlaceholder from '../assets/images/profilePlaceHolder.png'
 function UserProfile() {
   
   const u=useLoaderData()
@@ -9,13 +9,13 @@ function UserProfile() {
   return (
 
     <>
-      <div className='flex flex-col items-center'>
-        <div className='border p-4 mt-2'>
-          <div className=''>
+      <div className='flex flex-col items-center pt-2'>
+        <div className='border rounded-md p-4 mt-2'>
+          <div className='flex flex-col gap-2'>
 
             <div className="avatar flex justify-center text-center">
               <div className="w-24 text-center block rounded-full">
-                <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+                <img src={user.profile_picture?user.profile_picture.url:profilePlaceholder} />
               </div>
             </div>
             <h2 className='text-xl text-center'>{user.name}</h2>

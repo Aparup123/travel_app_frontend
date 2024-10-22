@@ -7,7 +7,7 @@ import { tripContext } from "../contexts/tripContext"
 import { MdEdit, MdDelete } from "react-icons/md";
 import { GoKebabHorizontal } from "react-icons/go"
 import availableTickets from "../utils/getAvailableTickets"
-import tripImage from '../assets/images/tripImage.jpg'
+import tripImagePlaceholder from '../assets/images/tripImagePlaceholder.png'
 import getFormattedDate from "../utils/getFormattedDate"
 import getAvailableTickets from "../utils/getAvailableTickets"
 import getDuration from "../utils/getDuration"
@@ -148,7 +148,7 @@ function TripPage() {
     return (<div className="p-4">
       <div className="card md:card-side border-2 md:max-h-[30rem] lg">
         <figure className="md:w-2/5 h-auto">
-          <img src={trip.cover_image?.url||tripImage} className="w-full h-auto object-cover"/>
+          <img src={trip.cover_image?.url||tripImagePlaceholder} className="w-full h-auto object-cover"/>
         </figure>
         <div className="card-body"> 
         <h1 className="card-title">{trip.title}</h1>
@@ -184,7 +184,7 @@ function TripPage() {
               <h1>Booked by</h1>
               <div>
                 {trip.booked_by.map((user, index) => {
-                  return <p key={user._id}>{index + 1}. <span className="font-bold">{user.username}</span> {user.email}</p>
+                  return <p key={user._id}>{index + 1}. <Link to={`/profile/${user.username}`} className="font-bold link link-primary">{user.username}</Link> {user.email}</p>
                 })
                 }
               </div>

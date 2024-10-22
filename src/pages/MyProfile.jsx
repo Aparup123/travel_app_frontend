@@ -5,6 +5,7 @@ import axios from 'axios'
 import { enqueueSnackbar } from 'notistack'
 import Button from '../components/Button'
 import { BiEdit } from 'react-icons/bi'
+import profilePlaceholder from '../assets/images/profilePlaceHolder.png'
 function MyProfile() {
   const [loading, setLoading] = useState(false)
   const [userImage, setUserImage]=useState()
@@ -126,14 +127,14 @@ function MyProfile() {
         <div className='flex flex-col gap-2'>
         
           <div className="avatar flex justify-center text-center">
-          <button className="absolute bottom-0 right-12 bg-neutral text-2xl" onClick={() => document.getElementById('my_modal_3').showModal()}><BiEdit/></button>
+          <button className="absolute bottom-0 right-12 bg-slate-200 dark:bg-neutral text-2xl" onClick={() => document.getElementById('my_modal_3').showModal()}><BiEdit/></button>
             <div className="w-24 text-center block rounded-full">
-              <img src={userData.profile_picture?userData.profile_picture.url:"https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"} />
+              <img src={userData.profile_picture?userData.profile_picture.url:profilePlaceholder} />
             </div>
           </div>
           <h2 className='text-xl text-center'>{userData.name}</h2>
-          <p><span className='font-bold'>Username:</span>{userData.username}</p>
-          <p><span className='font-bold'>email:</span>{userData.email}</p>
+          <p><span className='font-bold'>Username: </span>{userData.username}</p>
+          <p><span className='font-bold'>Email: </span>{userData.email}</p>
           <div className='text-center'>
             {/* <button className="btn btn-neutral btn-sm my-2 " onClick={logout}>Log out</button> */}
             <Button onClick={logout} loading={loading}>Logout</Button>

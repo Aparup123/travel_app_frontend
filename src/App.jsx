@@ -20,6 +20,7 @@ import EditTrip from './pages/EditTrip'
 import editTripLoader from './utils/loaders/editTripLoader'
 import tripPageLoader from './utils/loaders/tripPageLoader'
 import { SnackbarProvider } from 'notistack'
+import LoadingPage from './pages/LoadingPage'
 // import tripPageLoader from './utils/loaders/tripPageLoader'
 
 const router=createBrowserRouter([
@@ -86,9 +87,11 @@ const router=createBrowserRouter([
 
 
 function App() {
+    const [loading, setLoading]=useState(false)
     const [userData, setUserData]=useState({name:"", username:"", email:"", booked_trips:[], created_trips:[]})
     const [trips, setTrips]=useState([])
     useEffect(() => {
+      setLoading(true)
         axios.get(`${import.meta.env.VITE_SITE_URL}/api/users/profile`, {withCredentials:true})
         .then((res)=>{
             console.log(res.data)
@@ -99,18 +102,26 @@ function App() {
             console.log(err)
             redirect('/login')
         })
+        .finally(()=>{
+             // fetch trips
+              axios.get(`${import.meta.env.VITE_SITE_URL}/api/trips`)
+              .then((res)=>{
+                setTrips(res.data)
+              })
+              .catch((err)=>{
+                console.log(err)
+              })
+              .finally(()=>{
+                  setLoading(false)
+              })
+        })
 
-         // fetch trips
-         axios.get(`${import.meta.env.VITE_SITE_URL}/api/trips`)
-         .then((res)=>{
-           setTrips(res.data)
-         })
-         .catch((err)=>{
-           console.log(err)
-         })
+        
         
     }, []);
     
+  if(loading)
+    return <LoadingPage/>
     
   return (
     <userContext.Provider value={{userData, setUserData}}>
